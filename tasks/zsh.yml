@@ -1,0 +1,31 @@
+- name: install zsh
+  apt: name=zsh
+  tags:
+    - zsh
+
+- name: check that zsh config exists
+  stat:
+    path: ~/.oh-my-zsh
+  register: oh_my_stats
+  tags:
+    - zsh
+
+- name: change shell
+  shell: chsh -s $(which zsh)
+  tags:
+    - zsh
+
+- name: install ohmyzsh
+  shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > ~/.oh-my-installer && chmod +x ~/.oh-my-installer && ~/.oh-my-installer
+  when: oh_my_stats.stat.exists == False
+  become_user: rejdeboer
+  tags:
+    - zsh
+
+- name: install zsh-autosuggestions
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+  tags:
+    - zsh
+
