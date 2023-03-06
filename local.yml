@@ -1,7 +1,10 @@
 ---
 - hosts: localhost
-  connection: local
-  become: true
+
+  vars:
+    source_key: "./.ssh/id_rsa"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+    personal: "{{ lookup('env', 'HOME') }}/personal"
 
   pre_tasks:
     - name: update cache
@@ -14,35 +17,15 @@
         - core
 
   tasks:
+  - include: tasks/ssh.yml
+  - include: tasks/core.yml
+  - include: tasks/git.yml
   - include: tasks/zsh.yml
   - include: tasks/node.yml
-  - name: install packages
-    package:
-      name: 
-        - htop
-        - tmux
-
-  - name: copy home config
-    copy:
-      src: '{{item}}'
-      dest: '~'
-      owner: root
-      group: root
-    loop:
-      - .tmux.conf
-      - .Xmodmap
-      - .bashrc
-      - .bash_profile
-
-  - name: copy .config
-    copy:
-      src: '{{item}}'
-      dest: '~/.config'
-      owner: root
-      group: root
-    loop:
-      - .config/nvim
-      - .config/i3
+  - include: tasks/npm-packages.yml
+  - include: tasks/nvim.yml
+  - include: tasks/dotfiles.yml
+  - include: tasks/productivity-tools.yml
 
   - name: check if cargo is installed
     shell: command -v cargo
