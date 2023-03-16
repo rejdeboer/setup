@@ -1,0 +1,31 @@
+- name: Install cargo deb
+  command: cargo install cargo-deb
+  tags:
+    - alacritty
+
+- name: Install alacritty
+  tags:
+    - alacritty
+  block:
+    - name: Create temporary directory
+      tempfile:
+        state: directory
+      register: alacritty_dir
+
+    - name: Clone alacritty
+      git:
+        force: true
+        repo: 'https://github.com/alacritty/alacritty'
+        dest: '~/Downloads/alacritty'
+
+    - name: Build alacritty
+      command: cargo build --release
+      args:
+        chdir: '~/Downloads/alacritty'
+
+    - name: Set up alacritty
+      become: true
+      command: "{{ item }}"
+      loop:
+        - cp /home/rejdeboer/Downloads/alacritty/target/release/alacritty /usr/local/bin
+        - update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/alacritty 50
