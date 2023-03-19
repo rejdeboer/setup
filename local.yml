@@ -12,6 +12,7 @@
         update_cache: true
         force_apt_get: true
         state: present
+      become: true
       tags:
         - install
         - core
@@ -28,3 +29,4 @@
     - include: tasks/dotfiles.yml
     - include: tasks/productivity-tools.yml
     - include: tasks/install-alacritty.yml
+    - include: tasks/terraform.yml
