@@ -29,3 +29,7 @@
       loop:
         - cp /home/rejdeboer/Downloads/alacritty/target/release/alacritty /usr/local/bin
         - update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/alacritty 50
+
+    - name: Install theme
+      shell: curl -LO --output-dir ~/.config/alacritty https://github.com/catppuccin/alacritty/raw/main/catppuccin-macchiato.toml
+      become: true
