@@ -4,4 +4,13 @@
     name: [ "tmux", "fzf", "tldr", "ripgrep", "shutter" ]
   tags:
     - install
-    - productivity
+    - producti
+- name: Clone TPM repository
+  git:
+    repo: 'https://github.com/tmux-plugins/tpm.git'
+    dest: "{{ lookup('env', 'HOME') }}/.tmux/plugins/tpm"
+  become: true
+  become_user: rejdeboer
+  tags:
+    - install
+    - producti
